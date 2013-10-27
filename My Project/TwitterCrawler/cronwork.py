@@ -106,15 +106,15 @@ for counter in range(0,len(tweets)):
                                   +tweets[counter]+","+time.strftime('%d/%m/%Y %H:%M:%S',timestamp[counter])+"\n")
                 fileToWrite.close()
 
-
+print 'Collected: ' + str(len(tweets_ids)) + ' tweet(s)!'
 #Write maximum id to file
 if len(tweets_ids) > 0:
     controlIdFile = open("NewData/maximum_id.csv","w")
-try:
-    controlIdFile.write(str(max(tweets_ids)))
-    controlIdFile.close()
-except Exception as fileEx:
-    fileToWriteError=open("Errors.txt","a")
-    fileToWriteError.write(str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
+    try:
+        controlIdFile.write(str(max(tweets_ids)))
+        controlIdFile.close()
+    except Exception as fileEx:
+        fileToWriteError=open("Errors.txt","a")
+        fileToWriteError.write(str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
 
 print 'done'
