@@ -2,9 +2,12 @@
 Created on 27 Oct 2013
 
 @author: miljan
+
+Module works on the corpus for every fx pair and chooses top 50
+bigrams to be used in later classification.
+
 '''
 
-# Main bigrams
 import nltk, pprint, string, csv  # @UnusedImport
 from operator import itemgetter
 
@@ -22,8 +25,12 @@ negationsWords.close()
 negations = negations[0].split()
 
 allPairs = ['GBPUSD','EURUSD','AUDUSD','USDCAD','USDCHF','USDJPY']
-    
-def createBigrams(sentence, dict_bigram):
+
+"""
+Function which takes a tweets, filters it and creates bigrams from it.
+Returns a list of bigrams.
+""" 
+def createBigrams(sentence):
     # correct misspelled tweets from a couple of sources
     sentence = sentence.replace('sho ', 'short ')
     # create tokens from the given sentence
@@ -34,31 +41,28 @@ def createBigrams(sentence, dict_bigram):
         if pair.lower() in tokens:
             counter += 1
     if counter > 1:
-        return dict_bigram
+        return []
     # remove stopwords from the sentence
     tokens = [token for token in tokens if token not in stopwords]
     # remove punctuation from tokens
     tokens = [s.translate(None, string.punctuation) for s in tokens]
     # remove numerics and empty strings
     tokens = [x for x in tokens if (x and not (x.isdigit() or x[0] == '-' and x[1:].isdigit()))]
-
-    
     # create bigrams from tokens
     bigrams = nltk.bigrams(tokens)
-    # update dict of bigrams
-    for big in bigrams:
-        if big == ('pips', 'pips'):
-            continue
-        if big in dict_bigram:
-            dict_bigram[big] = dict_bigram[big] + 1
-        else:
-            dict_bigram[big] = 1
-    return dict_bigram
+    return bigrams
     
-    
-
+"""
+Function which creates a csv file containing top 50 bigrams for the
+given fx pair. Corpus is read from the premade folder.
+Features are filtered based on high sentiment words.    
+"""
 def getTop50Bigrams(pairname):
-         
+    
+    # ------------------------------------------------------------
+    # Create a list of all bigrams from the corpus
+    # ------------------------------------------------------------
+    
     # get tweets from historic and new data together
     tweets = []
     path1 = "Historic/" + pairname + "/" + pairname + ".csv"
@@ -76,13 +80,21 @@ def getTop50Bigrams(pairname):
     # get a dict of bigrams that stores bigrams and their frequency as values
     d_bigrams = {}
     for tweet in tweets:
-        d_bigrams = createBigrams(tweet, d_bigrams)
-       
+        l_bigrams = createBigrams(tweet)
+        # go through bigrams list and update the dictionary
+        for big in l_bigrams:
+            if big == ('pips', 'pips'):
+                continue
+            if big in d_bigrams:
+                d_bigrams[big] = d_bigrams[big] + 1
+            else:
+                d_bigrams[big] = 1
+               
     # create a list from the dict
     csvData = []
     for (col1, col2), col3 in d_bigrams.iteritems():
         csvData.append([col1, col2, col3])
-    # sort the items from the dict by value
+    # sort the list items from the dict by value (2d sort)
     csvData = sorted(csvData, key=itemgetter(2))
        
     # write all sorted pairs to a csv file
@@ -90,7 +102,6 @@ def getTop50Bigrams(pairname):
     f.writelines(','.join(str(j) for j in i) + '\n' for i in csvData)
     f.close()
 
-    
     # ------------------------------------------------------------
     # Generate top 50 bigrams
     # ------------------------------------------------------------

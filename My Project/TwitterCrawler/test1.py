@@ -94,27 +94,36 @@
 # # y_pred, sigma2_pred = gp.predict(x, eval_MSE=True)
 # # print y_pred
 # # # print sigma2_pred
-import csv,pprint
+# import csv,pprint
+# 
+# # get negation words
+# negationsWords = open("negations.txt","r");
+# negations = negationsWords.readlines()
+# negationsWords.close()
+# negations = negations[0].split()
+# 
+# 
+# counter = 0
+# tweets = []
+# path1 = "Historic/EURUSD/EURUSD.csv"
+# with open(path1, 'rb') as csvfile1:
+#     reader1 = csv.reader(csvfile1, delimiter=',')
+#     for row in reader1:
+#         sentence = row[2].split()
+#         for neg in negations:
+#             if neg in sentence:
+#                 counter+=1
+#                 tweets.append(row[2])
+#                 break
+# print counter
+# pprint.pprint(tweets)
 
-# get negation words
-negationsWords = open("negations.txt","r");
-negations = negationsWords.readlines()
-negationsWords.close()
-negations = negations[0].split()
+import csv, pprint, ast
 
-
-counter = 0
 tweets = []
-path1 = "Historic/EURUSD/EURUSD.csv"
+path1 = "output.csv"
 with open(path1, 'rb') as csvfile1:
     reader1 = csv.reader(csvfile1, delimiter=',')
     for row in reader1:
-        sentence = row[2].split()
-        for neg in negations:
-            if neg in sentence:
-                counter+=1
-                tweets.append(row[2])
-                break
-print counter
-pprint.pprint(tweets)
-
+        tweets.append(row)
+pprint.pprint(ast.literal_eval(tweets[0][4]))
