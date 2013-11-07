@@ -85,14 +85,19 @@ def analyzeTrainingSet(pairname):
         tweet.append(l_features)
         tweet.append(label)
     #write results to a csv file
-    resultFile = open("NewData/" + pairname + "/" + pairname + "TrainingFeatures.csv",'wb')
+    resultFile = open("NewData/" + pairname + "/" + pairname + "output1.csv",'wb')
     wr = csv.writer(resultFile, dialect='excel')
     wr.writerows(l_tweets)
     
 
-    
-analyzeTrainingSet('EURUSD') 
-
+if __name__ == '__main__':    
+    #read the currency pairs from textfile
+    pairsFile = open("Pairs.txt","r");
+    pairs = pairsFile.readlines()
+    pairsFile.close()
+    pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
+    for pair in pairs:
+        analyzeTrainingSet(pair)
 
 
 

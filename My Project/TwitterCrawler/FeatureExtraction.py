@@ -11,21 +11,6 @@ bigrams to be used in later classification.
 import nltk, pprint, string, csv  # @UnusedImport
 from operator import itemgetter
 
-
-# Get stopwords from a text file
-stopwordsFile = open("stopwords.txt","r");
-stopwords = stopwordsFile.readlines()
-stopwordsFile.close()
-stopwords = [word.strip('\r\n') for word in stopwords]
-
-# get negation words
-negationsWords = open("negations.txt","r");
-negations = negationsWords.readlines()
-negationsWords.close()
-negations = negations[0].split()
-
-allPairs = ['GBPUSD','EURUSD','AUDUSD','USDCAD','USDCHF','USDJPY']
-
 """
 Function which takes a tweets, filters it and creates bigrams from it.
 Returns a list of bigrams.
@@ -144,6 +129,21 @@ def getTop50Bigrams(pairname):
     
     
 if __name__ == '__main__':
+    
+    # Get stopwords from a text file
+    stopwordsFile = open("stopwords.txt","r");
+    stopwords = stopwordsFile.readlines()
+    stopwordsFile.close()
+    stopwords = [word.strip('\r\n') for word in stopwords]
+    
+    # get negation words
+    negationsWords = open("negations.txt","r");
+    negations = negationsWords.readlines()
+    negationsWords.close()
+    negations = negations[0].split()
+
+    allPairs = ['GBPUSD','EURUSD','AUDUSD','USDCAD','USDCHF','USDJPY']
+    
     for pair in allPairs:
         getTop50Bigrams(pair)
     
