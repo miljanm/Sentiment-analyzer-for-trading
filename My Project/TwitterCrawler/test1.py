@@ -128,27 +128,43 @@
 #         tweets.append(row)
 # pprint.pprint(ast.literal_eval(tweets[0][4]))
 
-import nltk
-
-def gender_features(word):
-    return {'last_letter': word[-1]}
-
-
-from nltk.corpus import names
-import random
-names = ([(name, 'male') for name in names.words('male.txt')] +
-         [(name, 'female') for name in names.words('female.txt')])
-random.shuffle(names)
-
-featuresets = [(gender_features(n), g) for (n,g) in names]
-train_set, test_set = featuresets[500:], featuresets[:500]
-classifier = nltk.NaiveBayesClassifier.train(train_set)
-import pprint
-pprint.pprint(train_set)
-
-a = classifier.classify(gender_features('Neo'))
-print a
-
-
+# import nltk
+# 
+# def gender_features(word):
+#     return {'last_letter': word[-1]}
+# 
+# 
+# from nltk.corpus import names
+# import random
+# names = ([(name, 'male') for name in names.words('male.txt')] +
+#          [(name, 'female') for name in names.words('female.txt')])
+# random.shuffle(names)
+# 
+# featuresets = [(gender_features(n), g) for (n,g) in names]
+# train_set, test_set = featuresets[500:], featuresets[:500]
+# classifier = nltk.NaiveBayesClassifier.train(train_set)
+# import pprint
+# pprint.pprint(train_set)
+# 
+# a = classifier.classify(gender_features('Neo'))
+# print a
 
 
+import csv
+pairname = 'EURUSD'
+l_topBigrams = []
+path1 = "NewData/" + pairname + "/" + pairname + "Bigrams45.csv"
+with open(path1, 'rb') as csvfile1:
+    reader1 = csv.reader(csvfile1, delimiter=',')
+    for row in reader1:
+        print row
+        l_topBigrams.append([row[0],row[1]])
+
+l_topBigrams = [[b[0].split(" "),b[1]] for b in l_topBigrams]
+l_topBigrams = [[b[0][0],b[0][1],b[1]] for b in l_topBigrams]
+print l_topBigrams
+
+
+f = open("NewData/" + pairname + "/" + pairname + "Bigrams45v1.csv", 'w')
+f.writelines(','.join(str(j) for j in i) + '\n' for i in l_topBigrams)
+f.close()

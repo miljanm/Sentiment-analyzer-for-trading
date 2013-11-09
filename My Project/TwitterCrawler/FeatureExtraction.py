@@ -16,6 +16,12 @@ Function which takes a tweets, filters it and creates bigrams from it.
 Returns a list of bigrams.
 """ 
 def createBigrams(sentence):
+    allPairs = ['GBPUSD','EURUSD','AUDUSD','USDCAD','USDCHF','USDJPY']
+    # Get stopwords from a text file
+    stopwordsFile = open("stopwords.txt","r");
+    stopwords = stopwordsFile.readlines()
+    stopwordsFile.close()
+    stopwords = [word.strip('\r\n') for word in stopwords]
     # correct misspelled tweets from a couple of sources
     sentence = sentence.replace('sho ', 'short ')
     # create tokens from the given sentence
@@ -38,12 +44,40 @@ def createBigrams(sentence):
     return bigrams
     
 """
-Function which creates a csv file containing top 50 bigrams for the
-given fx pair. Corpus is read from the premade folder.
-Features are filtered based on high sentiment words.    
+Function which takes a tweets, filters it and creates unigrams from it.
+Returns a list of unigrams.
+"""    
+def createUnigrams(sentence):
+    allPairs = ['GBPUSD','EURUSD','AUDUSD','USDCAD','USDCHF','USDJPY']
+    # Get stopwords from a text file
+    stopwordsFile = open("stopwords.txt","r");
+    stopwords = stopwordsFile.readlines()
+    stopwordsFile.close()
+    stopwords = [word.strip('\r\n') for word in stopwords]
+    # correct misspelled tweets from a couple of sources
+    sentence = sentence.replace('sho ', 'short ')
+    # create tokens from the given sentence
+    tokens = nltk.word_tokenize(sentence)
+    #remove tweets with multiple pairs
+    counter = 0
+    for pair in allPairs:
+        if pair.lower() in tokens:
+            counter += 1
+    if counter > 1:
+        return []
+    # remove stopwords from the sentence
+    tokens = [token for token in tokens if token not in stopwords]
+    # remove punctuation from tokens
+    tokens = [s.translate(None, string.punctuation) for s in tokens]
+    # remove numerics and empty strings
+    tokens = [x for x in tokens if (x and not (x.isdigit() or x[0] == '-' and x[1:].isdigit()))]
+    return tokens
+
 """
-def getTop50Bigrams(pairname):
-    
+Function to generate a file with all the bigrams that are found
+in the premade corpus of tweets for the given pair.
+"""
+def __getAllCorpusBigrams(pairname):
     # ------------------------------------------------------------
     # Create a list of all bigrams from the corpus
     # ------------------------------------------------------------
@@ -87,6 +121,13 @@ def getTop50Bigrams(pairname):
     f.writelines(','.join(str(j) for j in i) + '\n' for i in csvData)
     f.close()
 
+ 
+"""
+Function which creates a csv file containing top 50 bigrams for the
+given fx pair.
+Features are filtered based on high sentiment words.    
+"""
+def __getTop50Bigrams(pairname):
     # ------------------------------------------------------------
     # Generate top 50 bigrams
     # ------------------------------------------------------------
@@ -98,7 +139,8 @@ def getTop50Bigrams(pairname):
         for row in reader1:
             features.append(row)
      
-    accepted = ['indecisive','support','resistance','rally','rallies','uptrend','upwards','sell','buy','bought','sold','bull','bullish','bear','bearish','long','short','upside','downtrend','downside','downward']    
+#     accepted = ['indecisive','support','resistance','rally','rallies','uptrend','upwards','sell','buy','bought','sold','bull','bullish','bear','bearish','long','short','upside','downtrend','downside','downward']    
+    accepted = ['indecisive','support','resistance','rally','rallies','sell','buy','bought','sold','bull','bullish','bear','bearish','long','short']    
     notAccepted = ['term', 'ibfx2','ibfx','usd','ibfx617','ibfx619','ibfxlive','fcto','t','fxmgm','ubs', 'morgan', 'goldman','sachs','commerzbank','deutsche']
     firstFifty = []
     # get bigrams that match desired terms, and remove those that also contain unwanted terms
@@ -116,7 +158,7 @@ def getTop50Bigrams(pairname):
         if len(firstFifty) >= 50:
             break
      
-    f = open("NewData/" + pairname + "/" + pairname + "Bigrams50.csv", 'w')
+    f = open("NewData/" + pairname + "/" + pairname + "Bigrams50v2.csv", 'w')
     f.writelines(','.join(str(j) for j in i) + '\n' for i in firstFifty)
     f.close()
      
@@ -144,7 +186,7 @@ if __name__ == '__main__':
 
     allPairs = ['GBPUSD','EURUSD','AUDUSD','USDCAD','USDCHF','USDJPY']
     
-    for pair in allPairs:
-        getTop50Bigrams(pair)
-    
+#     for pair in allPairs:
+#         getTop50Bigrams(pair)
+    __getTop50Bigrams('EURUSD')
     

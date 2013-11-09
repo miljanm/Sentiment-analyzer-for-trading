@@ -18,7 +18,7 @@ pairsFile = open("Pairs.txt","r");
 pairs = pairsFile.readlines()
 pairsFile.close()
 
-#buil querystring to be used within searching api
+#build query string to be used within searching api
 querystring = ''
 #replace newlines and / signs
 for pair in pairs[1:]:

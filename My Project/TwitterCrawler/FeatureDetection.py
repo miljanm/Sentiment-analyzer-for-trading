@@ -4,7 +4,7 @@ Created on 28 Oct 2013
 @author: miljan
 '''
 import csv, pprint  # @UnusedImport
-from FeatureExtraction import createBigrams
+from FeatureExtraction import createBigrams, createUnigrams
 import itertools
 
 """
@@ -19,48 +19,67 @@ def detectFeatures(sentence, pairname):
         reader1 = csv.reader(csvfile1, delimiter=',')
         for row in reader1:
             l_topBigrams.append([row[0],row[1]])
-            
-#     pprint.pprint(l_topBigrams)
-    
+                
     # get bigrams from the given tweet
     l_bigrams = createBigrams(sentence)
     # initialise an empty list to mark found features
-    l_matches = [0] * 50
+    l_matches = [0] * 52
     # check for found bigrams in the top bigrams list
     for bigram in l_bigrams:
         l_temp = list(bigram)
         if l_temp in l_topBigrams:
             l_matches[l_topBigrams.index(l_temp)] = 1
-#     pprint.pprint(l_bigrams)
-#     pprint.pprint(l_matches)
+            
+    # LOOK FOR UNIGRAMS
+    unigrams = createUnigrams(sentence)
+#     ######Sell Unigram Variations######
+#     sellVariations = ['sell','short','bear','bearish','sold']
+#     sellUnigram = 0
+#     #####Buy unigram variations#######
+#     buyVariations = ['buy','long','bull','bullish','bought']
+#     buyUnigram = 0    
+#     ####INSTITUTION LIST####
+#     institutionList = ['ubs', 'morgan', 'goldman','sachs','commerzbank']
+#     containsInstitution = 0
+    #####UPTREND#####
+    uptrendVariations = ['uptrend','upside','upward']
+    isUptrend = 0
+    #####DOWNTREND#####
+    downtrendVariations = ['downtrend','downside','downward']
+    isDowntrend = 0
+#     isClosed = 0
+#     hasOccurences = 0
+#     count = 0
+#     for i in sentence:
+#         if i == '$':
+# #             count += 1
+# #             if count >= 2:
+#             hasOccurences = 1
+    
+    for i in unigrams:
+        if i in uptrendVariations:
+            isUptrend = 1
+        if i in downtrendVariations:
+            isDowntrend = 1
+#         if i == 'closed':
+#             isClosed = 1
+#         if i in sellVariations:
+#             sellUnigram = 1
+#         if i in buyVariations:
+#             buyUnigram = 1
+#         if i in institutionList:
+#             containsInstitution = 1
+
+#     l_matches[45] = sellUnigram
+#     l_matches[46] = buyUnigram
+#     l_matches[47] = isClosed
+#     l_matches[47] = containsInstitution
+    l_matches[50] = isUptrend
+    l_matches[51] = isDowntrend
+#     l_matches[51] = hasOccurences 
     
     return l_matches
 
-"""
-Function which takes a given pairname, accesses the appropriate files
-and marks all the important features present in the given tweets.
-It produces an output csv file with feature vector added at the end
-of each tweet.
-"""
-def analyzeTweets(pairname):
-    # list of tweets in the set
-    l_tweets = []
-    # Read all the data from the designated file
-    path1 = "NewData/" + pairname + "/" + pairname + "test1.csv"
-    with open(path1, 'rb') as csvfile1:
-        reader1 = csv.reader(csvfile1, delimiter=',')
-        for row in reader1:
-            l_tweets.append(row)
-    
-    # get feature vectors for all the tweets
-    for tweet in l_tweets:
-        l_features = detectFeatures(tweet[2], pairname)
-        tweet.append(l_features)
-    pprint.pprint(l_tweets)
-    # write the result to a csv file
-    resultFile = open("NewData/" + pairname + "/" + pairname + "output1.csv",'wb')
-    wr = csv.writer(resultFile, dialect='excel')
-    wr.writerows(l_tweets)
  
 """
 Function used to analyze a training set for the given pairname,
@@ -85,7 +104,7 @@ def analyzeTrainingSet(pairname):
         tweet.append(l_features)
         tweet.append(label)
     #write results to a csv file
-    resultFile = open("NewData/" + pairname + "/" + pairname + "output1.csv",'wb')
+    resultFile = open("NewData/" + pairname + "/" + pairname + "TrainingFeatures4.csv",'wb')
     wr = csv.writer(resultFile, dialect='excel')
     wr.writerows(l_tweets)
     
@@ -96,9 +115,9 @@ if __name__ == '__main__':
     pairs = pairsFile.readlines()
     pairsFile.close()
     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
-    for pair in pairs:
-        analyzeTrainingSet(pair)
-
+#     for pair in pairs:
+    analyzeTrainingSet('EURUSD')
+#     print detectFeatures('closed sell $eurusd 0.1 lots at 1.5655', 'EURUSD')
 
 
 
