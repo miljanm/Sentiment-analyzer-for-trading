@@ -38,15 +38,15 @@ def confusionMatrixClassifier(pairname, trainset):
     featureVectors = []
     labelSet = []
     
-    # My set of features
-    path1 = "NewData/" + pairname + "/" + pairname + trainset
+    # new set of features
+    path1 = "NewData/" + pairname + "/TrainingSets/" + pairname + trainset
     with open(path1, 'rb') as csvfile1:
         reader1 = csv.reader(csvfile1, delimiter=',')
         for row in reader1:
             featureVectors.append(row[4])
             labelSet.append(row[5])
 
-    # Laurentiu's set of features
+    # old set of features
     #path1 = "Historic/" + pairname + "/" + pairname + "Testing.csv"
 #     path1 = "NewData/" + pairname + "/" + pairname + "LaurentiuTesting.csv"
 #     with open(path1, 'rb') as csvfile1:
@@ -145,9 +145,9 @@ def confusionMatrixClassifier(pairname, trainset):
             guess = probDist.max()
             confidence = probDist.prob(guess)
             label = test_set_labels[i]
-#             if confidence < 0.8:
-#                 unsure += 1
-#                 continue
+            if confidence < 0.7:
+                unsure += 1
+                continue
             if label != guess:
                 totalCounter += 1
                 if guess == '0':
@@ -203,7 +203,7 @@ def confusionMatrixClassifier(pairname, trainset):
     # train the classifier on the whole set
 #     naiveBayes = nltk.NaiveBayesClassifier.train(featureSet)
     # storing the trained classifier for future use
-#     f = open("NewData/" + pairname + "/" + pairname + "NaiveBayes.pickle", 'wb')
+#     f = open("NewData/" + pairname + "/Classifiers/" + pairname + "NaiveBayes.pickle", 'wb')
 #     pickle.dump(naiveBayes, f)
 #     f.close()
 
@@ -213,13 +213,13 @@ def confusionMatrixClassifier(pairname, trainset):
 Function which trains a classifier on a set of features and
 training examples and pickles it.
 """        
-def trainClassifier(pairname, trainset):
+def trainClassifier(pairname, trainset, pickleFilename):
     
     featureVectors = []
     labelSet = []
     
     # My set of features
-    path1 = "NewData/" + pairname + "/" + pairname + trainset
+    path1 = "NewData/" + pairname + "/TrainingSets/" + pairname + trainset
     with open(path1, 'rb') as csvfile1:
         reader1 = csv.reader(csvfile1, delimiter=',')
         for row in reader1:
@@ -232,7 +232,7 @@ def trainClassifier(pairname, trainset):
     # train the classifier on the whole set
     naiveBayes = nltk.NaiveBayesClassifier.train(featureSet)
     # storing the trained classifier for future use
-    f = open("NewData/" + pairname + "/" + pairname + "NaiveBayes.pickle", 'wb')
+    f = open("NewData/" + pairname + "/Classifiers/" + pairname + pickleFilename, 'wb')
     pickle.dump(naiveBayes, f)
     f.close()
 
@@ -242,9 +242,17 @@ Classify a given tweet vector for a specific pair.
 Naive bayes is used with a different set of features, depending on pair.
 Returns a list of 2 elements: [classification, confidence]
 """
-def classifyTweet(tweetVector, pairname):    
+def classifyTweet(tweetVector, pairname, classifier):    
     # unpickle the classifier
-    f = open("NewData/" + pairname + "/" + pairname + "NaiveBayes.pickle")
+    if classifier == 1:
+        classif = "NaiveBayes1.pickle"
+    elif classifier == 2:
+        classif = "NaiveBayes2.pickle"
+    elif classifier == 3:
+        pass
+    else:
+        raise Exception("Wrong classifier number given in NaiveBayes.classifyTweet()")
+    f = open("NewData/" + pairname + "/Classifiers/" + pairname + classif)
     classifier = pickle.load(f)
     f.close()
     # produce featureset from the feature string literal
@@ -267,7 +275,7 @@ if __name__ == '__main__':
 #     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
 #     for pair in pairs:
 #         print pair
-#     trainClassifier('EURUSD','TrainingFeatures4.csv')
+    trainClassifier('EURUSD','TrainingFeaturesTop45+7unigrams.csv','NaiveBayes2.pickle')
         
 #     tweetVector = '[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]'
 #     a = classifyTweet(tweetVector, 'EURUSD')

@@ -3,6 +3,8 @@ Created on 27 Oct 2013
 
 @author: miljan
 
+# TO DO: change comments to correspond to changes in the structure and purpose of the module
+
 Module works on the corpus for every fx pair and chooses top 50
 bigrams to be used in later classification.
 
@@ -117,7 +119,7 @@ def __getAllCorpusBigrams(pairname):
     csvData = sorted(csvData, key=itemgetter(2))
        
     # write all sorted pairs to a csv file
-    f = open("NewData/" + pairname + "/" + pairname + "Bigrams.csv", 'w')
+    f = open("NewData/" + pairname + "/Features/" + pairname + "Bigrams.csv", 'w')
     f.writelines(','.join(str(j) for j in i) + '\n' for i in csvData)
     f.close()
 
@@ -133,7 +135,7 @@ def __getTop50Bigrams(pairname):
     # ------------------------------------------------------------
     
     features = []
-    path2 = "NewData/" + pairname + "/" + pairname + "Bigrams.csv"
+    path2 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams.csv"
     with open(path2, 'rb') as csvfile1:
         reader1 = csv.reader(csvfile1, delimiter=',')
         for row in reader1:
@@ -158,7 +160,7 @@ def __getTop50Bigrams(pairname):
         if len(firstFifty) >= 50:
             break
      
-    f = open("NewData/" + pairname + "/" + pairname + "Bigrams50v2.csv", 'w')
+    f = open("NewData/" + pairname + "/Features/" + pairname + "Bigrams50v2.csv", 'w')
     f.writelines(','.join(str(j) for j in i) + '\n' for i in firstFifty)
     f.close()
      

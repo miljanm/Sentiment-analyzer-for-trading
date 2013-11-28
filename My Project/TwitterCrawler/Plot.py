@@ -6,6 +6,7 @@ Created on 9 Nov 2013
 
 import matplotlib.dates as dt
 import matplotlib.pyplot as plot
+from mpl_toolkits.axes_grid1 import host_subplot
 import csv, pprint  # @UnusedImport
 from datetime import datetime
 import numpy as np
@@ -73,7 +74,6 @@ def plotPrediction(np_price_data, np_sentiment_data):
 #     fig.autofmt_xdate()
 #     plot.show()
     
-    from mpl_toolkits.axes_grid1 import host_subplot
 
 #     fig, ax = plot.subplots()
     host = host_subplot(111)

@@ -27,7 +27,7 @@ def analyzeTweets(pairname,infile, outfile):
     
     # get feature vectors for all the tweets
     for tweet in l_tweets:
-        l_features = detectFeatures(tweet[2], pairname)
+        l_features = detectFeatures(tweet[2], pairname, 1)
         tweet.append(l_features)
 #     pprint.pprint(l_tweets)
     # write the result to a csv file
