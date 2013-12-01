@@ -275,12 +275,12 @@ if __name__ == '__main__':
 #     pairs = pairsFile.readlines()
 #     pairsFile.close()
 #     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
-#     for pair in pairs:
-#         print pair
-    pair = 'USDJPY'
+    pairs = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
+    for pair in pairs:
 #     confusionMatrixClassifier(pair,'TrainingFeaturesTop45+7unigrams.csv')
-    confusionMatrixClassifier(pair,'TrainingFeaturesTop50+updown.csv')
+#     confusionMatrixClassifier(pair,'TrainingFeaturesTop50+updown.csv')
+        trainClassifier(pair, 'TrainingFeaturesTop50+updown.csv','NaiveBayes1')
+        trainClassifier(pair, 'TrainingFeaturesTop45+7unigrams.csv','NaiveBayes2')
 #     tweetVector = '[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]'
 #     a = classifyTweet(tweetVector, 'EURUSD')
 #     print a
-    pass
