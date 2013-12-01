@@ -37,12 +37,14 @@ def confusionMatrixClassifier(pairname, trainset):
     
     featureVectors = []
     labelSet = []
+    all_Tweets = []
     
     # new set of features
     path1 = "NewData/" + pairname + "/TrainingSets/" + pairname + trainset
     with open(path1, 'rb') as csvfile1:
         reader1 = csv.reader(csvfile1, delimiter=',')
         for row in reader1:
+            all_Tweets.append(row)
             featureVectors.append(row[4])
             labelSet.append(row[5])
 
@@ -74,7 +76,7 @@ def confusionMatrixClassifier(pairname, trainset):
             counter2 += 1
         else:
             counter3 += 1
-    print [counter1,counter2,counter3]
+    print [counter3,counter2,counter1]
     
     # cross-validation
     probabilities = []
@@ -82,7 +84,7 @@ def confusionMatrixClassifier(pairname, trainset):
     for i in xrange(0,5):
         a = i*100
         b = (i*100)+100
-#         
+         
         test_set = featureSet[a:b]
         train_set = featureSet[:a] + featureSet[b:]
         naiveBayes = nltk.NaiveBayesClassifier.train(train_set)
@@ -132,7 +134,7 @@ def confusionMatrixClassifier(pairname, trainset):
         oneWrong0 = 0
         oneWrongM1 = 0
         m1Wrong0 = 0
-        m1Wring1 = 0
+        m1Wrong1 = 0
         cor0 = 0
         corm1 = 0
         cor1 = 0
@@ -145,7 +147,7 @@ def confusionMatrixClassifier(pairname, trainset):
             guess = probDist.max()
             confidence = probDist.prob(guess)
             label = test_set_labels[i]
-            if confidence < 0.7:
+            if confidence < 0.9:
                 unsure += 1
                 continue
             if label != guess:
@@ -167,9 +169,9 @@ def confusionMatrixClassifier(pairname, trainset):
                     if (label == '0'):
                         m1Wrong0 += 1
                     else:
-                        m1Wring1 += 1
+                        m1Wrong1 += 1
                 if indexSet[positionCounter] not in known:
-                    errors.append((label, indexSet[positionCounter],guess,confidence))
+                    errors.append((label, indexSet[positionCounter]-1,guess,confidence))
             else:
                 if guess == '0':
                     cor0 += 1
@@ -177,7 +179,7 @@ def confusionMatrixClassifier(pairname, trainset):
                     cor1 += 1
                 else:
                     corm1 += 1
-        print "label/guess/position"
+        print "label/position/guess"
         pprint.pprint(errors)
         accuracy = (100-totalCounter)
         unsureness = (100-unsure)
@@ -187,10 +189,10 @@ def confusionMatrixClassifier(pairname, trainset):
         print "Errors total: " + str(totalCounter)
         print "Accuracy: " + str(accuracy) +"%"
         print "class -1/0/1/total"
-        print "Class -1: " + str([corm1,m1Wrong0,m1Wring1])
+        print "Class -1: " + str([corm1,m1Wrong0,m1Wrong1])
         print "Class 0: " + str([zeroWrongM1,cor0,zeroWrong1])
         print "Class 1: " + str([oneWrongM1,oneWrong0,cor1])
-        print "Total: " + str([corm1+zeroWrongM1+oneWrongM1,m1Wrong0+cor0+oneWrong0,m1Wring1+zeroWrong1+cor1])
+        print "Total: " + str([corm1+zeroWrongM1+oneWrongM1,m1Wrong0+cor0+oneWrong0,m1Wrong1+zeroWrong1+cor1])
         print "Unsure: " + str(unsure)
     print "Accuracy"
     print probabilities
@@ -275,8 +277,9 @@ if __name__ == '__main__':
 #     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
 #     for pair in pairs:
 #         print pair
-    trainClassifier('EURUSD','TrainingFeaturesTop45+7unigrams.csv','NaiveBayes2.pickle')
-        
+    pair = 'USDJPY'
+#     confusionMatrixClassifier(pair,'TrainingFeaturesTop45+7unigrams.csv')
+    confusionMatrixClassifier(pair,'TrainingFeaturesTop50+updown.csv')
 #     tweetVector = '[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]'
 #     a = classifyTweet(tweetVector, 'EURUSD')
 #     print a

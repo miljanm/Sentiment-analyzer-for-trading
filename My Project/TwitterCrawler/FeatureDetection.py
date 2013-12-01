@@ -154,13 +154,14 @@ def analyzeTrainingSet(pairname, classifier, outfile):
 
 if __name__ == '__main__':    
     #read the currency pairs from textfile
-    pairsFile = open("Pairs.txt","r");
-    pairs = pairsFile.readlines()
-    pairsFile.close()
-    pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
-#     for pair in pairs:
-    analyzeTrainingSet('EURUSD', 2, 'TrainingFeaturesTop45+7unigrams.csv')
-#     print detectFeatures('closed sell $eurusd 0.1 lots at 1.5655', 'EURUSD')
+#     pairsFile = open("Pairs.txt","r");
+#     pairs = pairsFile.readlines()
+#     pairsFile.close()
+#     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
+    pairnames = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
+    for pair in pairnames:
+        analyzeTrainingSet(pair, 1, 'TrainingFeaturesTop50+updown.csv')
+        analyzeTrainingSet(pair, 2, 'TrainingFeaturesTop45+7unigrams.csv')
 
 
 

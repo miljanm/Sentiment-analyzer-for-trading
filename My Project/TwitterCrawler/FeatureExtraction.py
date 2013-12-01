@@ -4,6 +4,7 @@ Created on 27 Oct 2013
 @author: miljan
 
 # TO DO: change comments to correspond to changes in the structure and purpose of the module
+# TO DO: change method to add select top45 bigrams for the second feature set
 
 Module works on the corpus for every fx pair and chooses top 50
 bigrams to be used in later classification.

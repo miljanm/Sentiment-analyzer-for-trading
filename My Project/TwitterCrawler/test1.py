@@ -149,22 +149,23 @@
 # a = classifier.classify(gender_features('Neo'))
 # print a
 
-
 import csv
-pairname = 'EURUSD'
-l_topBigrams = []
-path1 = "NewData/" + pairname + "/" + pairname + "Bigrams45.csv"
-with open(path1, 'rb') as csvfile1:
-    reader1 = csv.reader(csvfile1, delimiter=',')
-    for row in reader1:
-        print row
-        l_topBigrams.append([row[0],row[1]])
-
-l_topBigrams = [[b[0].split(" "),b[1]] for b in l_topBigrams]
-l_topBigrams = [[b[0][0],b[0][1],b[1]] for b in l_topBigrams]
-print l_topBigrams
-
-
-f = open("NewData/" + pairname + "/" + pairname + "Bigrams45v1.csv", 'w')
-f.writelines(','.join(str(j) for j in i) + '\n' for i in l_topBigrams)
-f.close()
+pairnames = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
+for pair in pairnames: 
+    pairname = pair
+    l_topBigrams = []
+    path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv"
+    with open(path1, 'rb') as csvfile1:
+        reader1 = csv.reader(csvfile1, delimiter=',')
+        for row in reader1:
+            print row
+            l_topBigrams.append([row[0],row[1]])
+    
+    l_topBigrams = [[b[0].split(" "),b[1]] for b in l_topBigrams]
+    l_topBigrams = [[b[0][0],b[0][1],b[1]] for b in l_topBigrams]
+    print l_topBigrams
+    
+    
+    f = open("NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv", 'w')
+    f.writelines(','.join(str(j) for j in i) + '\n' for i in l_topBigrams)
+    f.close()

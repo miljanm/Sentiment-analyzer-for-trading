@@ -40,7 +40,7 @@ Function which takes name of the fx pair and input and output files.
 It classifies all the tweets in the input file of the given pair
 and write results to the specified outfile.
 """
-def classify(pairname,infile, outfile):
+def classify(pairname,infile, outfile, classifier):
     data = []
     path1 = "NewData/" + pairname + "/" + pairname + infile
     with open(path1, 'rb') as csvfile1:
@@ -50,7 +50,7 @@ def classify(pairname,infile, outfile):
     
     # append classifications to tweets
     for i in data:
-        classification = classifyTweet(i[4], pairname)
+        classification = classifyTweet(i[4], pairname, classifier)
         i.append(classification[0])
     
     # write classifications to a specified file
@@ -61,7 +61,7 @@ def classify(pairname,infile, outfile):
 
 if __name__ == '__main__':
 #     analyzeTweets('EURUSD', '_NFPtest8Nov.csv', '_NFPtest8NovFeatures.csv')
-    classify('EURUSD', '_NFPtest8NovFeatures.csv', '_NFPtest8NovClassified.csv')
+    classify('EURUSD', '_NFPtest8NovFeatures.csv', '_NFPtest8NovClassified.csv', 1)
     
     
     
