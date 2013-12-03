@@ -147,7 +147,7 @@ def confusionMatrixClassifier(pairname, trainset):
             guess = probDist.max()
             confidence = probDist.prob(guess)
             label = test_set_labels[i]
-            if confidence < 0.9:
+            if confidence < 0.5:
                 unsure += 1
                 continue
             if label != guess:
@@ -170,8 +170,8 @@ def confusionMatrixClassifier(pairname, trainset):
                         m1Wrong0 += 1
                     else:
                         m1Wrong1 += 1
-                if indexSet[positionCounter] not in known:
-                    errors.append((label, indexSet[positionCounter]-1,guess,confidence))
+                if indexSet[positionCounter-1] not in known:
+                    errors.append((label, indexSet[positionCounter-1],guess,confidence))
             else:
                 if guess == '0':
                     cor0 += 1
@@ -277,10 +277,11 @@ if __name__ == '__main__':
 #     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
     pairs = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
     for pair in pairs:
-#     confusionMatrixClassifier(pair,'TrainingFeaturesTop45+7unigrams.csv')
+#     pair = 'USDCAD'
+        confusionMatrixClassifier(pair,'TrainingFeaturesTop45+7unigrams.csv')
 #     confusionMatrixClassifier(pair,'TrainingFeaturesTop50+updown.csv')
-        trainClassifier(pair, 'TrainingFeaturesTop50+updown.csv','NaiveBayes1')
-        trainClassifier(pair, 'TrainingFeaturesTop45+7unigrams.csv','NaiveBayes2')
+#         trainClassifier(pair, 'TrainingFeaturesTop50+updown.csv','NaiveBayes1')
+#         trainClassifier(pair, 'TrainingFeaturesTop45+7unigrams.csv','NaiveBayes2')
 #     tweetVector = '[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]'
 #     a = classifyTweet(tweetVector, 'EURUSD')
 #     print a
