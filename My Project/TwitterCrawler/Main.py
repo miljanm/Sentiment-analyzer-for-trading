@@ -11,7 +11,7 @@ Created on 3 Dec 2013
 # import urllib
 # import tweepy, pprint, sys
 # 
-def removeNonAscii(s): return "".join(i for i in s if ord(i)<128)
+# def removeNonAscii(s): return "".join(i for i in s if ord(i)<128)
 # 
 # app = Flask(__name__)
 #  
@@ -63,8 +63,8 @@ import tweepy, pprint, sys
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
+# @app.route('/')
+# def index():
     
 #     tweetList = []
 #     
@@ -135,10 +135,19 @@ def index():
 #                 yield line.rstrip() + '<br/>\n'
 # 
 #     return Response(inner(), mimetype='text/html')  # text/html is required for most browsers to show th$
-    def inner():
-        for x in range(5):
-            time.sleep(1)
-            yield '%s<br/>\n' % x
+@app.route('/')
+def index():
+    def inner():     
+        proc = subprocess.Popen(
+                    ['python','./StreamingAPI.py'],
+                    shell=False,
+                    stdout=subprocess.PIPE
+                )
+        for line in iter(proc.stdout.readline,''):
+            yield '%s<br/>\n' % line
+#         for x in range(5):
+#             time.sleep(1)
+#             yield '%s<br/>\n' % x
     return Response(inner(), mimetype='text/html')  # text/html is required 
 if __name__ == '__main__':
     app.run(debug=True)
