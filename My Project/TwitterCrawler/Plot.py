@@ -32,7 +32,10 @@ def getPriceData(pairname):
     path = "NewData/" + pairname + "/" + pairname + "Prices.csv"
     with open(path, 'rb') as csvfile1:
         reader1 = csv.reader(csvfile1, delimiter=',')
+        counter = 0
         for row in reader1:
+            counter += 1
+            print counter
             date = _formatDate(row[1])
             # guard against improperly formatted time strings
             if date == 'FAIL':
@@ -44,7 +47,7 @@ def getPriceData(pairname):
 
 def getSentimentData(pairname, infile):
     data = []#
-    path = "NewData/" + pairname + "/" + pairname + infile
+    path = "NewData/" + pairname + "/Tests/NFP_Nov8/" + pairname + infile
     with open(path, 'rb') as csvfile1:
         reader1 = csv.reader(csvfile1, delimiter=',')
         for row in reader1:
