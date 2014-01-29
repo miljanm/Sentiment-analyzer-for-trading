@@ -156,6 +156,7 @@ def simple():
     import datetime
     import StringIO
     import random
+    import Plot
      
     from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
     from matplotlib.figure import Figure

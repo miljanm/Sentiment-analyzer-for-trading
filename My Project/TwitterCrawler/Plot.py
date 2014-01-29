@@ -111,12 +111,13 @@ def plotPrediction(np_price_data, np_sentiment_data):
     fig.set_size_inches(18.5,10.5)
     plot.savefig('NFPtest.png',dpi=100)
 
-    
-if __name__ == '__main__':
+def main():
     np_sentiment_data = getSentimentData('EURUSD', '_NFPtest8NovClassified.csv')
     np_price_data = getPriceData('EURUSD')
     plotPrediction(np_price_data, np_sentiment_data)
     
+if __name__ == '__main__':
+    main()
     
     
     
