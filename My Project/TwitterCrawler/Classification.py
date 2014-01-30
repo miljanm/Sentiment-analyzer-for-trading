@@ -5,8 +5,8 @@ Created on 8 Nov 2013
 '''
 
 from FeatureDetection import detectFeatures
-from NaiveBayes import classifyTweet
-import pprint, csv  # @UnusedImport
+from Classifiers import __produceFeaturesDictionary
+import pprint, pickle, ast, csv  # @UnusedImport
 
 
 """
@@ -34,6 +34,44 @@ def analyzeTweets(pairname,infile, outfile):
     resultFile = open("NewData/" + pairname + "/" + pairname + outfile,'wb')
     wr = csv.writer(resultFile, dialect='excel')
     wr.writerows(l_tweets)
+
+
+"""
+Classify a given tweet vector for a specific pair.
+NB 1 or 2 or SVM (nr. 3) is used, depending on 'classifier' parameter.
+Returns a list of 2 elements: [classification, confidence] if NB otherwise 
+just [classification].
+"""
+def classifyTweet(tweetVector, pairname, classifier):  
+    nbFlag = 0  
+    # unpickle the classifier
+    if classifier == 1:
+        classif = "NaiveBayes1.pickle"
+        nbFlag = 1
+    elif classifier == 2:
+        classif = "NaiveBayes2.pickle"
+        nbFlag = 1
+    elif classifier == 3:
+        classif = "svm.pickle"
+    else:
+        raise Exception("Wrong classifier number given in NaiveBayes.classifyTweet()")
+    f = open("NewData/" + pairname + "/Classifiers/" + pairname + classif)
+    classifier = pickle.load(f)
+    f.close()
+    
+    if nbFlag == 1:
+        # produce feature set from the feature string literal
+        d_featureVector = __produceFeaturesDictionary(tweetVector)
+        # get the probability distribution of classed
+        probDist = classifier.prob_classify(d_featureVector)
+        # get the class with highest probability
+        maxClass = probDist.max()
+        return [maxClass,probDist.prob(maxClass)]
+    else: # it's an svm
+        l_featureVector = ast.literal_eval(tweetVector)
+        prediction = classifier.predict(l_featureVector)
+        return [prediction]
+
 
 """
 Function which takes name of the fx pair and input and output files.

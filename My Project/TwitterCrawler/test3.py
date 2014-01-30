@@ -46,6 +46,5 @@ import atexit, time
 #         proc.kill()
 import sys
 for i in xrange(4):
-    time.sleep(1)
     print i
-    sys.stdout.flush()
+#     sys.stdout.flush()

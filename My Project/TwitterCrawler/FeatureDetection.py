@@ -10,6 +10,9 @@ import itertools
 """
 Function which takes a tweet concerning a certain fx pair and 
 detects what top features does it contain.
+Classifier 1 - NAIVE BAYES #1 uses top50 bigrams + 2 up/down unigrams
+Classifier 2 - NAIVE BAYES #2 uses top45 bigrams + 7 unigrams
+Classifier 3 - SVM
 """
 def detectFeatures(sentence, pairname, classifier):
     l_topBigrams = []
@@ -49,7 +52,7 @@ def detectFeatures(sentence, pairname, classifier):
         l_matches[50] = isUptrend
         l_matches[51] = isDowntrend
         
-    # NAIVE BAYES #2 uses top45 bigrams + 7 unigrams
+    # NAIVE BAYES #2 and SVM uses top45 bigrams + 7 unigrams
     elif classifier == 2:
         l_topBigrams = []
         path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv"
@@ -117,15 +120,14 @@ def detectFeatures(sentence, pairname, classifier):
         l_matches[50] = isUptrend
         l_matches[51] = isDowntrend
         l_matches[51] = hasOccurences        
-    
-    # reserved placeholder for classifier #3
+
     else:
         raise Exception("Wrong classifier number given to detectFeatures()")    
     return l_matches
 
  
 """
-Function used to analyze a training set for the given pairname,
+Function used to analyse a training set for the given pairname,
 and create a feature vector for each of the tweets in the training set.
 """   
 def analyzeTrainingSet(pairname, classifier, outfile):

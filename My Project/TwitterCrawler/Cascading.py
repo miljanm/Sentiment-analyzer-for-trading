@@ -5,7 +5,7 @@ Created on 28 Nov 2013
 '''
 
 from FeatureDetection import detectFeatures
-from NaiveBayes import classifyTweet
+from Classifiers import classifyTweet
 import csv
 
 
@@ -50,9 +50,11 @@ def classify(pairname,infile, outfile):
         for row in reader1:
             data.append(row)
     
+    # number of items with confidence less than required percentage
     ltcounter = 0
     # append classifications to tweets
     for i in data:
+        # detect the features in the tweet text
         l_features = detectFeatures(i[2], pairname, 1)
         i.append(l_features)
         classification = classifyTweet(i[4], pairname, 1)

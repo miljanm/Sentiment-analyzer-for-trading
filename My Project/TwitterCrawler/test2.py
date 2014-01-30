@@ -23,9 +23,10 @@ from sklearn import svm
 import csv, pprint, ast, random
 import numpy as np
 from nltk import NaiveBayesClassifier
-from NaiveBayes import __produceFeatures
+from Classifiers import __produceFeaturesDictionary
 from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB  # @UnusedImport
 
+# 100 x 5 fold cross validation 
 def trainClassifier1(pairname, trainset, pickleFilename, classifier):
     
     cumulative = []
@@ -41,14 +42,16 @@ def trainClassifier1(pairname, trainset, pickleFilename, classifier):
                 featureVectors.append(ast.literal_eval(row[4]))
                 labelSet.append(ast.literal_eval(row[5]))
     
+        # shuffling of test data
         featureSet = zip(featureVectors,labelSet)
         featureSet = np.array(featureSet)
         random.shuffle(featureSet)
         featureVectors = featureSet[:,0].tolist()
         labelSet = featureSet[:,1].tolist()
         
+        # create a dict of features for nltk naive bayes
         if classifier == 'naiveBayes':
-            featureSet = [(__produceFeatures(f),l) for (f,l) in zip(featureVectors,labelSet)]
+            featureSet = [(__produceFeaturesDictionary(f),l) for (f,l) in zip(featureVectors,labelSet)]
     
         acc = []
         for i in xrange(0,5):
@@ -97,6 +100,6 @@ if __name__ == '__main__':
 #     pairs = ['EURUSD']
     final  = [] 
     for pair in pairs:
-        res = trainClassifier1(pair, 'TrainingFeaturesTop50+updown.csv', 'EURUSDsvm1.pickle', 'naiveBayes2')
+        res = trainClassifier1(pair, 'TrainingFeaturesTop50+updown.csv', pair + 'svm1.pickle', 'svm')
         final.append([pair,res])
     pprint.pprint(final)
