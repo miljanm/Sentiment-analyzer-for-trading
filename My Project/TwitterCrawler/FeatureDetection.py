@@ -5,6 +5,7 @@ Created on 28 Oct 2013
 '''
 import csv, pprint  # @UnusedImport
 from FeatureExtraction import createBigrams, createUnigrams
+from Classification import readFeatureData
 import itertools
 
 """
@@ -14,16 +15,9 @@ Classifier 1 - NAIVE BAYES #1 uses top50 bigrams + 2 up/down unigrams
 Classifier 2 - NAIVE BAYES #2 uses top45 bigrams + 7 unigrams
 Classifier 3 - SVM
 """
-def detectFeatures(sentence, pairname, classifier):
-    l_topBigrams = []
+def detectFeatures(sentence, pairname, classifier, l_topBigrams):
     # NAIVE BAYES #1 uses top50 bigrams + 2 up/down unigrams
-    if classifier == 1:
-        path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams50.csv"
-        with open(path1, 'rb') as csvfile1:
-            reader1 = csv.reader(csvfile1, delimiter=',')
-            for row in reader1:
-                l_topBigrams.append([row[0],row[1]])
-                    
+    if classifier == 1:                    
         # get bigrams from the given tweet
         l_bigrams = createBigrams(sentence)
         # initialise an empty list to mark found features
@@ -53,14 +47,7 @@ def detectFeatures(sentence, pairname, classifier):
         l_matches[51] = isDowntrend
         
     # NAIVE BAYES #2 and SVM uses top45 bigrams + 7 unigrams
-    elif classifier == 2:
-        l_topBigrams = []
-        path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv"
-        with open(path1, 'rb') as csvfile1:
-            reader1 = csv.reader(csvfile1, delimiter=',')
-            for row in reader1:
-                l_topBigrams.append([row[0],row[1]])
-                    
+    elif classifier == 2:          
         # get bigrams from the given tweet
         l_bigrams = createBigrams(sentence)
         # initialise an empty list to mark found features
@@ -130,7 +117,7 @@ def detectFeatures(sentence, pairname, classifier):
 Function used to analyse a training set for the given pairname,
 and create a feature vector for each of the tweets in the training set.
 """   
-def analyzeTrainingSet(pairname, classifier, outfile):
+def __analyzeTrainingSet(pairname, classifier, outfile):
     # list of tweets in the set
     l_tweets = []
     # list of class labels for all tweets in the set
@@ -143,9 +130,17 @@ def analyzeTrainingSet(pairname, classifier, outfile):
             l_tweets.append(row[:4])
             l_classes.append(row[4])
     
+    # read in the feature data
+    l_topBigrams50, l_topBigrams45 = readFeatureData(pairname)
+
     # get feature vectors for all the tweets and append label at the end
     for tweet,label in itertools.izip(l_tweets,l_classes):
-        l_features = detectFeatures(tweet[2], pairname, classifier)
+        if classifier == 1:
+            l_features = detectFeatures(tweet[2], pairname, classifier, l_topBigrams50)
+        elif classifier == 2:
+            l_features = detectFeatures(tweet[2], pairname, classifier, l_topBigrams45)
+        else:
+            raise Exception('Unknown classifier number in __analyzeTrainingSet!')
         tweet.append(l_features)
         tweet.append(label)
     #write results to a csv file
@@ -162,8 +157,8 @@ if __name__ == '__main__':
 #     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
     pairnames = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
     for pair in pairnames:
-        analyzeTrainingSet(pair, 1, 'TrainingFeaturesTop50+updown.csv')
-        analyzeTrainingSet(pair, 2, 'TrainingFeaturesTop45+7unigrams.csv')
+        __analyzeTrainingSet(pair, 1, 'TrainingFeaturesTop50+updown.csv')
+        __analyzeTrainingSet(pair, 2, 'TrainingFeaturesTop45+7unigrams.csv')
 
 
 

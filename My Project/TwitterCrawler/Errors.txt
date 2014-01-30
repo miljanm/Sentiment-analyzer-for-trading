@@ -1,6 +1,0 @@
-<type 'exceptions.ValueError'>,12/12/2013 14:30:06
-<type 'exceptions.ValueError'>,12/12/2013 14:31:11
-<type 'exceptions.ValueError'>,12/12/2013 14:32:10
-<type 'exceptions.ValueError'>,12/12/2013 14:33:06
-<type 'exceptions.ValueError'>,12/12/2013 14:34:06
-<type 'exceptions.ValueError'>,12/12/2013 14:35:07

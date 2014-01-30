@@ -148,24 +148,53 @@
 # 
 # a = classifier.classify(gender_features('Neo'))
 # print a
+# 
+# import csv
+# pairnames = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
+# for pair in pairnames: 
+#     pairname = pair
+#     l_topBigrams = []
+#     path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv"
+#     with open(path1, 'rb') as csvfile1:
+#         reader1 = csv.reader(csvfile1, delimiter=',')
+#         for row in reader1:
+#             print row
+#             l_topBigrams.append([row[0],row[1]])
+#     
+#     l_topBigrams = [[b[0].split(" "),b[1]] for b in l_topBigrams]
+#     l_topBigrams = [[b[0][0],b[0][1],b[1]] for b in l_topBigrams]
+#     print l_topBigrams
+#     
+#     
+#     f = open("NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv", 'w')
+#     f.writelines(','.join(str(j) for j in i) + '\n' for i in l_topBigrams)
+#     f.close()
 
-import csv
-pairnames = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
-for pair in pairnames: 
-    pairname = pair
-    l_topBigrams = []
-    path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv"
-    with open(path1, 'rb') as csvfile1:
-        reader1 = csv.reader(csvfile1, delimiter=',')
-        for row in reader1:
-            print row
-            l_topBigrams.append([row[0],row[1]])
-    
-    l_topBigrams = [[b[0].split(" "),b[1]] for b in l_topBigrams]
-    l_topBigrams = [[b[0][0],b[0][1],b[1]] for b in l_topBigrams]
-    print l_topBigrams
-    
-    
-    f = open("NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv", 'w')
-    f.writelines(','.join(str(j) for j in i) + '\n' for i in l_topBigrams)
-    f.close()
+# UNUSED CODE
+# """
+# Function which takes a given pairname, accesses the appropriate files
+# and marks all the important features present in the given tweets.
+# It produces an output csv file with feature vector added at the end
+# of each tweet.
+# """
+# def analyzeTweets(pairname, infile, outfile):
+#     # list of tweets in the set
+#     l_tweets = []
+#     # Read all the data from the designated file
+#     path1 = "NewData/" + pairname + "/" + pairname + infile
+#     with open(path1, 'rb') as csvfile1:
+#         reader1 = csv.reader(csvfile1, delimiter=',')
+#         for row in reader1:
+#             l_tweets.append(row)
+#     
+#     # get feature vectors for all the tweets
+#     for tweet in l_tweets:
+#         l_features = detectFeatures(tweet[2], pairname, 1)
+#         tweet.append(l_features)
+# #     pprint.pprint(l_tweets)
+#     # write the result to a csv file
+#     resultFile = open("NewData/" + pairname + "/" + pairname + outfile,'wb')
+#     wr = csv.writer(resultFile, dialect='excel')
+#     wr.writerows(l_tweets)
+
+
