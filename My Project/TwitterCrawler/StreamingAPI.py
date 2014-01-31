@@ -6,7 +6,7 @@ Created on 15 Oct 2013
 '''
 import sys
 import tweepy
-import pprint
+import pprint # @UnusedImport
 import urllib
 
 def removeNonAscii(s): return "".join(i for i in s if ord(i)<128)
@@ -43,7 +43,7 @@ querystring.extend([urllib.quote(x.strip(), '') for x in pairs[1:]])
 def streamTweets():
     auth = tweepy.OAuthHandler('lLynvl98Pv08mftQwdbLg', '1NeHl8w5Ceh46XpLuxN7xebDSQNc2NsWlSEdzlVc4')
     auth.set_access_token('205479111-RS1reCmhxidi3GZWV29wN7kj6tjcxTDuStDnuLwU', 'WVj2SjUSQv12Cp3rs27MvoYCZ7IEOpK2Nu41e4AtTc')
-    api = tweepy.API(auth)
+    api = tweepy.API(auth)  # @UnusedVariable
             
     sapi = tweepy.streaming.Stream(auth, CustomStreamListener())
     sapi.filter(track=querystring, languages=['en'])

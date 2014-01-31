@@ -10,6 +10,7 @@ import re
 import time
 import os
 import ystockquote
+from socket import error as SocketError
 
 def removeNonAscii(s): return "".join(i for i in s if ord(i)<128)
 
@@ -31,9 +32,24 @@ for pair in pairs[1:]:
 ############################################
 for pairCounter in range(1,len(pairs)):
     currentPair = pairs[pairCounter].replace('/',"").replace('\r\n','').upper()
-    fileToWrite=open("NewData/"+currentPair.upper()+"/"+currentPair.upper()+"Prices.csv","a")
-    fileToWrite.write(ystockquote.get_price(currentPair+"=X")+","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ ", \n")
-
+    fileToWrite=open("NewData/"+currentPair.upper()+"/"+currentPair.upper()+"TemporaryPrices.csv","a")
+    try: 
+        quote = ystockquote.get_price(currentPair+"=X")
+        print quote
+    except SocketError as e:
+        fileToWriteError=open("Errors.txt","a")
+        fileToWriteError.write('Socket error' +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
+        fileToWriteError.write(e)
+        print e
+        fileToWriteError.close()
+    except Exception as e:
+        fileToWriteError=open("Errors.txt","a")
+        fileToWriteError.write('Other error' +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
+        fileToWriteError.write(e)
+        print e
+        fileToWriteError.close()
+    fileToWrite.write(quote+","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ ", \n")
+        
 #read control_maximum file and get maximum id to use as a filter
 try:
     control = open("NewData/maximum_id.csv","r")
@@ -96,7 +112,7 @@ for counter in range(0,len(tweets)):
                 if not os.path.isdir("NewData/"+currentPair.upper()):
                     os.makedirs("NewData/"+currentPair.upper())
                 try:
-                    fileToWrite=open("NewData/"+currentPair.upper()+"/"+currentPair.upper()+"Raw.csv","a")
+                    fileToWrite=open("NewData/"+currentPair.upper()+"/"+currentPair.upper()+"TemporaryRaw.csv","a")
                 except Exception as fileEx:
                     fileToWriteError=open("Errors.txt","a")
                     fileToWriteError.write(str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")

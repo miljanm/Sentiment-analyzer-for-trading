@@ -253,18 +253,19 @@ def trainClassifier(pairname, trainset, pickleFilename, classifier):
 
 
 if __name__ == '__main__':
+    pass
     #read the currency pairs from textfile
 #     pairsFile = open("Pairs.txt","r");
 #     pairs = pairsFile.readlines()
 #     pairsFile.close()
 #     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
-    pairs = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
+#     pairs = ['EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
 #     for pair in pairs:
-#     pair = 'USDCAD'
-#         __confusionMatrixClassifier(pair,'TrainingFeaturesTop45+7unigrams.csv')
-#     __confusionMatrixClassifier(pair,'TrainingFeaturesTop50+updown.csv')
-#         trainClassifier(pair, 'TrainingFeaturesTop50+updown.csv','NaiveBayes1')
-#         trainClassifier(pair, 'TrainingFeaturesTop45+7unigrams.csv','NaiveBayes2')
+#     pair = 'USDCHF'
+# #         __confusionMatrixClassifier(pair,'TrainingFeaturesTop45+7unigrams.csv')
+# #     __confusionMatrixClassifier(pair,'TrainingFeaturesTop50+updown.csv')
+#     trainClassifier(pair, 'TrainingFeaturesTop50+updown.csv','NaiveBayes1b.pickle','nb')
+#     trainClassifier(pair, 'TrainingFeaturesTop45+7unigrams.csv','NaiveBayes2b.pickle','nb')
 #     tweetVector = '[1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]'
 #     a = classifyTweet(tweetVector, 'EURUSD')
 #     print a

@@ -197,4 +197,35 @@
 #     wr = csv.writer(resultFile, dialect='excel')
 #     wr.writerows(l_tweets)
 
+# import ystockquote
+# import datetime
+# currentPair = 'GBPUSD'
+# res=  ystockquote.get_price(currentPair+"=X")
+# print res
+# fileToWrite=open("NewData/"+currentPair.upper()+"/"+currentPair.upper()+"TemporaryPrices.csv","a")
+# fileToWrite.write(res+","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ ", \n")
+# print 'done'
+
+# 
+# import csv, os
+# pair = 'EURUSD'
+# # read the temporary csv containing new prices
+# prices = []
+# pathToPrices = "NewData/" + pair + "/" + pair + "TemporaryPrices.csv"
+# with open(pathToPrices, 'rb') as csvfile1:
+#     reader1 = csv.reader(csvfile1, delimiter=',')
+#     for row in reader1:
+#         prices.append([row[0],row[1]])
+# # write the prices read to the main database
+# fileToWrite = open("NewData/"+ pair +"/"+ pair +"Prices.csv","a") 
+# wr = csv.writer(fileToWrite, dialect='excel')
+# wr.writerows(prices)
+# fileToWrite.close()
+# os.remove(pathToPrices)
+
+
+
+
+
+
 

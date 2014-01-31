@@ -5,8 +5,30 @@ Created on 28 Oct 2013
 '''
 import csv, pprint  # @UnusedImport
 from FeatureExtraction import createBigrams, createUnigrams
-from Classification import readFeatureData
 import itertools
+
+
+"""
+Method which reads the top50 and top45 bigrams files for the given pair.
+"""
+def readFeaturesData(pairname):
+    # read the top 50 bigrams for the given pair
+    l_topBigrams50 = []
+    path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams50.csv"
+    with open(path1, 'rb') as csvfile1:
+        reader1 = csv.reader(csvfile1, delimiter=',')
+        for row in reader1:
+            l_topBigrams50.append([row[0],row[1]])
+    
+    # read the top45 + 7 bigrams for the given pair
+    l_topBigrams45 = []
+    path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv"
+    with open(path1, 'rb') as csvfile1:
+        reader1 = csv.reader(csvfile1, delimiter=',')
+        for row in reader1:
+            l_topBigrams45.append([row[0],row[1]])
+            
+    return [l_topBigrams50, l_topBigrams45]
 
 """
 Function which takes a tweet concerning a certain fx pair and 
@@ -131,7 +153,7 @@ def __analyzeTrainingSet(pairname, classifier, outfile):
             l_classes.append(row[4])
     
     # read in the feature data
-    l_topBigrams50, l_topBigrams45 = readFeatureData(pairname)
+    l_topBigrams50, l_topBigrams45 = readFeaturesData(pairname)
 
     # get feature vectors for all the tweets and append label at the end
     for tweet,label in itertools.izip(l_tweets,l_classes):
@@ -149,16 +171,17 @@ def __analyzeTrainingSet(pairname, classifier, outfile):
     wr.writerows(l_tweets)
     
 
-if __name__ == '__main__':    
+if __name__ == '__main__': 
+    pass   
     #read the currency pairs from textfile
 #     pairsFile = open("Pairs.txt","r");
 #     pairs = pairsFile.readlines()
 #     pairsFile.close()
 #     pairs = [pair.replace('/','').strip() for pair in pairs[1:]]
-    pairnames = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
-    for pair in pairnames:
-        __analyzeTrainingSet(pair, 1, 'TrainingFeaturesTop50+updown.csv')
-        __analyzeTrainingSet(pair, 2, 'TrainingFeaturesTop45+7unigrams.csv')
+#     pairnames = ['GBPUSD', 'USDJPY', 'AUDUSD', 'USDCHF', 'USDCAD']
+#     for pair in pairnames:
+#         __analyzeTrainingSet(pair, 1, 'TrainingFeaturesTop50+updown.csv')
+#         __analyzeTrainingSet(pair, 2, 'TrainingFeaturesTop45+7unigrams.csv')
 
 
 

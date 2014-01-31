@@ -4,32 +4,10 @@ Created on 8 Nov 2013
 @author: miljan
 '''
 
-from FeatureDetection import detectFeatures
+
 from Classifiers import __produceFeaturesDictionary
 import pickle, csv
-
-
-"""
-Method which reads the top50 and top45 bigrams files for the given pair.
-"""
-def readFeatureData(pairname):
-    # read the top 50 bigrams for the given pair
-    l_topBigrams50 = []
-    path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams50.csv"
-    with open(path1, 'rb') as csvfile1:
-        reader1 = csv.reader(csvfile1, delimiter=',')
-        for row in reader1:
-            l_topBigrams50.append([row[0],row[1]])
-    
-    # read the top45 + 7 bigrams for the given pair
-    l_topBigrams45 = []
-    path1 = "NewData/" + pairname + "/Features/" + pairname + "Bigrams45.csv"
-    with open(path1, 'rb') as csvfile1:
-        reader1 = csv.reader(csvfile1, delimiter=',')
-        for row in reader1:
-            l_topBigrams45.append([row[0],row[1]])
-            
-    return [l_topBigrams50, l_topBigrams45]
+from FeatureDetection import detectFeatures, readFeaturesData
 
 
 """
@@ -74,17 +52,9 @@ Function which takes name of the fx pair and input and output files.
 It classifies all the tweets in the input file of the given pair
 and write results to the specified outfile.
 """
-def classify(pairname,infile, outfile):
-    # read in the tweets
-    data = []
-    path1 = "NewData/" + pairname + "/CascadingTests/" + pairname + infile
-    with open(path1, 'rb') as csvfile1:
-        reader1 = csv.reader(csvfile1, delimiter=',')
-        for row in reader1:
-            data.append(row)
-    
+def classify(pairname,data, outfile):
     # read in the feature data
-    l_topBigrams50, l_topBigrams45 = readFeatureData(pairname)
+    l_topBigrams50, l_topBigrams45 = readFeaturesData(pairname)
     
     # number of items with confidence less than required percentage
     ltcounter = 0
@@ -113,27 +83,24 @@ def classify(pairname,infile, outfile):
             else:
 #                 print type(i[4])
                 classification = __classifyTweet(i[4], pairname, 3)
-                i[3] = str(classification[0]) + 's'
-    print ltcounter
+                i[3] = str(int(classification[0])) + 's'
+        print str(pairname) + ' ' + str(i[3])
+    print 'unclassified: ' + str(ltcounter)
     
     # write classifications to a specified file
-    resultFile = open("NewData/" + pairname + "/CascadingTests/" + pairname + outfile,'wb')
+#     resultFile = open("NewData/" + pairname + "/CascadingTests/" + pairname + outfile,'wb')
+    resultFile = open(outfile, 'wb')
     wr = csv.writer(resultFile, dialect='excel')
     wr.writerows(data)
+    resultFile.close()
 
 
 
 if __name__ == '__main__':
-    classify('EURUSD', 'test1.csv', 'output1.csv')
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    pass
+#     pair = 'EURUSD'
+#     outfile = "NewData/" + pair + "/CascadingTests/" + pair + "output2.csv"
+#     classify('EURUSD', 'test1.csv', outfile)
     
     
     
