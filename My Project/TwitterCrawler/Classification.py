@@ -52,7 +52,7 @@ Function which takes name of the fx pair and input and output files.
 It classifies all the tweets in the input file of the given pair
 and write results to the specified outfile.
 """
-def classify(pairname,data, outfile):
+def classify(pairname, data, outfile):
     # read in the feature data
     l_topBigrams50, l_topBigrams45 = readFeaturesData(pairname)
     
@@ -60,6 +60,10 @@ def classify(pairname,data, outfile):
     ltcounter = 0
     # append classifications to tweets
     for i in data:
+#         if i[5]:
+#             print "there is something here"
+#         else:
+#             print "nothing here"
         # detect the features in the tweet text
         l_features = detectFeatures(i[2], pairname, 1, l_topBigrams50)
         i.append(l_features)
@@ -67,6 +71,7 @@ def classify(pairname,data, outfile):
         # cascading code
         # use NB1 and accept if confidence > 0.9
         if classification[1] > 0.9:
+            i.append(i[3])
             i[3] = str(classification[0]) + 'nb1'
         # otherwise relegate to NB2 and accept if confidence > 0.7
         else:
@@ -74,15 +79,18 @@ def classify(pairname,data, outfile):
             i[4] = l_features 
             classification = __classifyTweet(i[4], pairname, 2)
             if classification[1] > 0.7:
+                i.append(i[3])
                 i[3] = str(classification[0]) + 'nb2'
             # if confidence is less than 0.5 don't classify it
             elif classification[1] < 0.5:
+                i.append(i[3])
                 i[3] = 'lt0.5'
                 ltcounter += 1
             # otherwise classify with svm if between 0.7 and 0.5 confidence in NB
             else:
 #                 print type(i[4])
                 classification = __classifyTweet(i[4], pairname, 3)
+                i.append(i[3])
                 i[3] = str(int(classification[0])) + 's'
         print str(pairname) + ' ' + str(i[3])
     print 'unclassified: ' + str(ltcounter)

@@ -224,8 +224,19 @@
 # os.remove(pathToPrices)
 
 
-
-
+from Classification import classify
+import csv
+fileToRead="NewData/EURUSD/CascadingTests/EURUSDtest1.csv"
+tweets = []
+try:
+    with open(fileToRead, 'rb') as csvfile1:
+        reader1 = csv.reader(csvfile1, delimiter=',')
+        for row in reader1:
+            tweets.append(row)
+except IOError as e:
+    print 'opening ' + str(e)
+fileToWrite = "NewData/EURUSD/CascadingTests/EURUSDoutput1.csv"
+classify('EURUSD', tweets, fileToWrite)
 
 
 

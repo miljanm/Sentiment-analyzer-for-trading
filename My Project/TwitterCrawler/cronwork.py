@@ -38,14 +38,12 @@ for pairCounter in range(1,len(pairs)):
         print quote
     except SocketError as e:
         fileToWriteError=open("Errors.txt","a")
-        fileToWriteError.write('Socket error' +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
-        fileToWriteError.write(e)
+        fileToWriteError.write('ystockquote: Socket error' +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ ', ' + e + "\n")
         print e
         fileToWriteError.close()
     except Exception as e:
         fileToWriteError=open("Errors.txt","a")
-        fileToWriteError.write('Other error' +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
-        fileToWriteError.write(e)
+        fileToWriteError.write('ystockquote: Other error' +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ ', ' + e +"\n")
         print e
         fileToWriteError.close()
     fileToWrite.write(quote+","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ ", \n")
@@ -58,7 +56,7 @@ try:
 except Exception as fileEx:
     maxid="0"
     fileToWriteError=open("Errors.txt","a")
-    fileToWriteError.write(str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
+    fileToWriteError.write("maxid: " + str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
 
 #initialize searching
 twitter_search = twitter.Twitter(domain='api.twitter.com', api_version='1.1',  auth=twitter.oauth.OAuth('205479111-RS1reCmhxidi3GZWV29wN7kj6tjcxTDuStDnuLwU', 'WVj2SjUSQv12Cp3rs27MvoYCZ7IEOpK2Nu41e4AtTc', 'lLynvl98Pv08mftQwdbLg', '1NeHl8w5Ceh46XpLuxN7xebDSQNc2NsWlSEdzlVc4'))
@@ -71,7 +69,7 @@ try:
     twitter_result.append(twitter_search.search.tweets(q=querystring,lang="en",count=100,result_type="recent",since_id=str(long(float(maxid)))))
 except ValueError:
     fileToWriteErrorConnection=open("Errors.txt","a")
-    fileToWriteErrorConnection.write(str(ValueError) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
+    fileToWriteErrorConnection.write("twitter_res append: " + str(ValueError) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
         
 
 #build tweet_id array eg 23123122219978
@@ -115,7 +113,7 @@ for counter in range(0,len(tweets)):
                     fileToWrite=open("NewData/"+currentPair.upper()+"/"+currentPair.upper()+"TemporaryRaw.csv","a")
                 except Exception as fileEx:
                     fileToWriteError=open("Errors.txt","a")
-                    fileToWriteError.write(str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
+                    fileToWriteError.write("tweetWrite: " + str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
                 tweets_users[counter] = removeNonAscii(tweets_users[counter])
                 tweets[counter] = removeNonAscii(tweets[counter])
                 fileToWrite.write(str(tweets_ids[counter]) +","+tweets_users[counter]+","
@@ -131,6 +129,6 @@ if len(tweets_ids) > 0:
         controlIdFile.close()
     except Exception as fileEx:
         fileToWriteError=open("Errors.txt","a")
-        fileToWriteError.write(str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
+        fileToWriteError.write("maxID writeback: " + str(fileEx) +","+datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")+ "\n")
 
 print 'done'
