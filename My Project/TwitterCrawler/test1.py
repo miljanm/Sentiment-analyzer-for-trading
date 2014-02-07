@@ -223,20 +223,45 @@
 # fileToWrite.close()
 # os.remove(pathToPrices)
 
-
-from Classification import classify
-import csv
-fileToRead="NewData/EURUSD/CascadingTests/EURUSDtest1.csv"
-tweets = []
-try:
-    with open(fileToRead, 'rb') as csvfile1:
-        reader1 = csv.reader(csvfile1, delimiter=',')
-        for row in reader1:
-            tweets.append(row)
-except IOError as e:
-    print 'opening ' + str(e)
-fileToWrite = "NewData/EURUSD/CascadingTests/EURUSDoutput1.csv"
-classify('EURUSD', tweets, fileToWrite)
-
-
-
+# 
+# from Classification import classify
+# import csv
+# fileToRead="NewData/EURUSD/CascadingTests/EURUSDtest1.csv"
+# tweets = []
+# try:
+#     with open(fileToRead, 'rb') as csvfile1:
+#         reader1 = csv.reader(csvfile1, delimiter=',')
+#         for row in reader1:
+#             tweets.append(row)
+# except IOError as e:
+#     print 'opening ' + str(e)
+# fileToWrite = "NewData/EURUSD/CascadingTests/EURUSDoutput1.csv"
+# classify('EURUSD', tweets, fileToWrite)
+# 
+# import matplotlib.pyplot as plt
+# import numpy as np
+# # 
+# T = np.array([6, 7, 8, 9, 10, 11, 12])
+# power = np.array([1.53E+03, 5.92E+02, 2.04E+02, 7.24E+01, 2.72E+01, 1.10E+01, 4.70E+00])
+# # 
+# # plt.plot(T,power)
+# # plt.show()
+# 
+# 
+# from scipy.interpolate import spline
+# 
+# xnew = np.linspace(T.min(),T.max(),300)
+# 
+# power_smooth = spline(T,power,xnew)
+# 
+# plt.plot(xnew,power_smooth)
+# plt.show()
+from scipy.interpolate import interp1d
+import numpy as np
+import matplotlib.pyplot as plt
+x = np.linspace(0, 10, 10)
+y = np.cos(-x**2/8.0)
+f2 = interp1d(x, y, kind='cubic')
+xnew = np.linspace(0, 10, 40)
+plt.plot(xnew, f2(xnew),'--')
+plt.show()

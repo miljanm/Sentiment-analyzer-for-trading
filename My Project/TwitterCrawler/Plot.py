@@ -11,6 +11,8 @@ import csv, pprint  # @UnusedImport
 from datetime import datetime
 import numpy as np
 import operator
+from scipy.interpolate import spline
+
 
 """
 Function which takes a date in the format provided from fx quotes
@@ -116,7 +118,15 @@ def plotPrediction(np_price_data, np_sentiment_data):
       
 #     p1, = host.plot_date(np_price_data[-3000:-1000,1],np_price_data[-3000:-1000,0],'-',label='Pair Price')
     p1, = host.plot_date(np_price_data[:,1],np_price_data[:,0],'-',label='Pair Price')
-    p2, = par.plot_date(np_sentiment_data[:,1],np_sentiment_data[:,0],'-',label='Sentiment')
+
+    from scipy.interpolate import interp1d
+    x = np_sentiment_data[:,1]
+    y = np_sentiment_data[:,0]
+    f2 = interp1d(x, y, kind='cubic')
+    xnew = np.linspace(np_sentiment_data[:,1].min(),np_sentiment_data[:,1].max(),500)
+    p2, = par.plot_date(xnew,f2(xnew),'-',label='Sentiment')
+    
+    print 'done111'
     
     host.autoscale_view()
     host.grid(True)
@@ -141,10 +151,10 @@ def plotPrediction(np_price_data, np_sentiment_data):
     plot.savefig('testFeb1.png',dpi=100)
 
 def main():
-    pair = 'USDJPY'
-    np_sentiment_data = getSentimentData(pair, 'LiveResults.csv', 1000)
+    pair = 'EURUSD'
+    np_sentiment_data = getSentimentData(pair, 'LiveResults.csv', 2000)
     print np_sentiment_data
-    np_price_data = getPriceData(pair, 1200)
+    np_price_data = getPriceData(pair, 2000)
     print np_price_data
     plotPrediction(np_price_data, np_sentiment_data)
     

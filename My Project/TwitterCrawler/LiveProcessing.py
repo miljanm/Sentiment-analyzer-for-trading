@@ -21,6 +21,7 @@ def analyzeFeed():
     for pair in pairList:
         # flag to mark when there is nothing new to write/classify
         passFlag = 0
+        
         # -------- PRICE WRITING --------
         
         # read the temporary csv containing new prices
