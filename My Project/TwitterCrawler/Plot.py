@@ -10,6 +10,7 @@ from mpl_toolkits.axes_grid1 import host_subplot
 import csv, pprint  # @UnusedImport
 from datetime import datetime
 import numpy as np
+import operator
 
 """
 Function which takes a date in the format provided from fx quotes
@@ -27,39 +28,66 @@ def _formatDate(dateString):
 Function which returns a numpy array with price data for the 
 requested pair.
 """
-def getPriceData(pairname):
+def getPriceData(pairname, rangeA):
     data = []
-    path = "NewData/" + pairname + "/" + pairname + "Prices.csv"
+    temp = []
+    path = "NewData/" + pairname + "/CascadingTests/" + pairname + "LivePrices.csv"
     with open(path, 'rb') as csvfile1:
         reader1 = csv.reader(csvfile1, delimiter=',')
-        counter = 0
         for row in reader1:
-            counter += 1
-            print counter
-            date = _formatDate(row[1])
-            # guard against improperly formatted time strings
-            if date == 'FAIL':
-                continue
-            arr = np.array([float(row[0]),date])
-            data.append(arr)
+            temp.append(row)
+    
+    temp.sort(key=operator.itemgetter(1))
+    if rangeA > len(temp): 
+        rangeA = len(temp)
+    for i in temp[-rangeA:]:
+        date = _formatDate(i[1])
+        # guard against improperly formatted time strings
+        if date == 'FAIL':
+            continue
+        arr = np.array([float(i[0]),date])
+        data.append(arr)
     # convert price/dates pairs to numpy array
     return np.array(data)
 
-def getSentimentData(pairname, infile):
-    data = []#
-    path = "NewData/" + pairname + "/Tests/NFP_Nov8/" + pairname + infile
+"""
+Function which returns a numpy array with sentiment data for the 
+requested pair.
+"""
+def getSentimentData(pairname, infile, rangeA):
+    data = []
+    temp = []
+    path = "NewData/" + pairname + "/CascadingTests/" + pairname + infile
     with open(path, 'rb') as csvfile1:
         reader1 = csv.reader(csvfile1, delimiter=',')
         for row in reader1:
-            date = _formatDate(row[3])
-            # guard against improperly formatted time strings
-            if date == 'FAIL':
-                continue
-            arr = np.array([int(row[5]),date])
-            data.append(arr)
-        # make continuous time series for the sentiment
-        for i in xrange(1,len(data)):
-            data[i][0] += data[i-1][0]
+            temp.append(row)
+    
+    temp.sort(key=operator.itemgetter(5))
+    if rangeA > len(temp): 
+        rangeA = len(temp)
+    for i in temp[-rangeA:]:
+        date = _formatDate(i[5])
+        # guard against improperly formatted time strings
+        if date == 'FAIL':
+            continue
+        
+        if i[3][0] == '-':
+            if i[3][1] == '1':
+                classif = -1
+        elif i[3][0] == '0':
+            classif = 0
+        elif i[3][0] == '1':
+            classif = 1
+        else: 
+            continue
+        arr = np.array([classif,date])
+        data.append(arr)
+    
+    # make continuous time series for the sentiment
+    # sentiment read at any point in data represents sentiment up to that point
+    for i in xrange(1,len(data)):
+        data[i][0] += data[i-1][0]
     return np.array(data)
 
 
@@ -86,7 +114,8 @@ def plotPrediction(np_price_data, np_sentiment_data):
     host.set_ylabel("Pair Price")
     par.set_ylabel("Sentiment")
       
-    p1, = host.plot_date(np_price_data[-3000:-1000,1],np_price_data[-3000:-1000,0],'-',label='Pair Price')
+#     p1, = host.plot_date(np_price_data[-3000:-1000,1],np_price_data[-3000:-1000,0],'-',label='Pair Price')
+    p1, = host.plot_date(np_price_data[:,1],np_price_data[:,0],'-',label='Pair Price')
     p2, = par.plot_date(np_sentiment_data[:,1],np_sentiment_data[:,0],'-',label='Sentiment')
     
     host.autoscale_view()
@@ -109,11 +138,14 @@ def plotPrediction(np_price_data, np_sentiment_data):
     
     fig = plot.gcf()
     fig.set_size_inches(18.5,10.5)
-    plot.savefig('NFPtest.png',dpi=100)
+    plot.savefig('testFeb1.png',dpi=100)
 
 def main():
-    np_sentiment_data = getSentimentData('EURUSD', '_NFPtest8NovClassified.csv')
-    np_price_data = getPriceData('EURUSD')
+    pair = 'USDJPY'
+    np_sentiment_data = getSentimentData(pair, 'LiveResults.csv', 1000)
+    print np_sentiment_data
+    np_price_data = getPriceData(pair, 1200)
+    print np_price_data
     plotPrediction(np_price_data, np_sentiment_data)
     
 if __name__ == '__main__':

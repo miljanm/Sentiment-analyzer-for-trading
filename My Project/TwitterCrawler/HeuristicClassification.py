@@ -20,10 +20,10 @@ from FeatureExtraction import createUnigrams
 import csv
 
 def heuristic_classify(pairname ,data, outfile):
-    counter = 0
+    counter = len(data)
     for i in data:
-        counter = counter + 1
-#         print i[0], i[1], i[2]
+        counter = counter - 1
+#         print i[3][0]
         unigrams = createUnigrams(i[2])
 #         print str(counter) + str(unigrams)
         # rule 1
@@ -63,7 +63,7 @@ def heuristic_classify(pairname ,data, outfile):
             continue
         # rule 8 - sl hit/hit sl, direction is unknown
         if (unigrams and 'sl' in unigrams and unigrams[unigrams.index('sl')-1] == 'hit') or \
-           (unigrams and 'sl' in unigrams and unigrams[unigrams.index('sl')+1] == 'hit'):
+           (unigrams and 'sl' in unigrams and (unigrams.index('sl')+1) < len(unigrams) and unigrams[unigrams.index('sl')+1] == 'hit'):
             print 'r8 match@'+ str(counter)
             i[3] = 0
             continue
@@ -78,34 +78,36 @@ def heuristic_classify(pairname ,data, outfile):
             i[3] = -1
             continue
             
-    resultFile = open(outfile, 'wb')
+    resultFile = open(outfile, 'a')
     wr = csv.writer(resultFile, dialect='excel')
     wr.writerows(data)
     resultFile.close()
     
-from Classification import classify        
+
 if __name__ == '__main__':
-    outfile = "NewData/EURUSD/CascadingTests/EURUSDoutput2.csv"
-    fileToRead="NewData/EURUSD/CascadingTests/EURUSDtest1.csv"
-    tweets = []
-    try:
-        with open(fileToRead, 'rb') as csvfile1:
-            reader1 = csv.reader(csvfile1, delimiter=',')
-            for row in reader1:
-                tweets.append(row)
-    except IOError as e:
-        print 'opening ' + str(e)
-    classify('EURUSD', tweets, outfile)
-    
-    
-    outfile = "NewData/EURUSD/CascadingTests/EURUSDoutput2.csv"
-    fileToRead="NewData/EURUSD/CascadingTests/EURUSDoutput2.csv"
-    tweets = []
-    try:
-        with open(fileToRead, 'rb') as csvfile1:
-            reader1 = csv.reader(csvfile1, delimiter=',')
-            for row in reader1:
-                tweets.append(row)
-    except IOError as e:
-        print 'opening ' + str(e)
-    heuristic_classify('EURUSD', tweets, outfile)
+    pass
+#     from Classification import classify        
+#     outfile = "NewData/EURUSD/CascadingTests/EURUSDoutput2.csv"
+#     fileToRead="NewData/EURUSD/CascadingTests/EURUSDtest1.csv"
+#     tweets = []
+#     try:
+#         with open(fileToRead, 'rb') as csvfile1:
+#             reader1 = csv.reader(csvfile1, delimiter=',')
+#             for row in reader1:
+#                 tweets.append(row)
+#     except IOError as e:
+#         print 'opening ' + str(e)
+#     classify('EURUSD', tweets, outfile)
+#      
+#      
+#     outfile = "NewData/EURUSD/CascadingTests/EURUSDoutput2.csv"
+#     fileToRead="NewData/EURUSD/CascadingTests/EURUSDoutput2.csv"
+#     tweets = []
+#     try:
+#         with open(fileToRead, 'rb') as csvfile1:
+#             reader1 = csv.reader(csvfile1, delimiter=',')
+#             for row in reader1:
+#                 tweets.append(row)
+#     except IOError as e:
+#         print 'opening ' + str(e)
+#     heuristic_classify('EURUSD', tweets, outfile)
